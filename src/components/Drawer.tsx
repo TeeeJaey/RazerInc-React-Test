@@ -1,18 +1,30 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "../hooks";
 import { Profile } from "../model";
 import { ProfileItem } from "./ProfileItem";
-import { addProfile, moveProfileDown, moveProfileUp, renameProfile, selectSelectedProfile } from "../store";
+import {
+    addProfile,
+    moveProfileDown,
+    moveProfileUp,
+    renameProfile,
+    selectSelectedProfile,
+    useAppSelector,
+} from "../store";
 import { DeleteConfirm } from "./DeleteConfirm";
 
-const isFirstOrder = (profileList: Profile[], selectedProfile: Profile | null) => {
+const isFirstOrder = (
+    profileList: Profile[],
+    selectedProfile: Profile | null
+) => {
     if (!selectedProfile) return false;
 
     return profileList[0].id === selectedProfile.id;
 };
 
-const isLastOrder = (profileList: Profile[], selectedProfile: Profile | null) => {
+const isLastOrder = (
+    profileList: Profile[],
+    selectedProfile: Profile | null
+) => {
     if (!selectedProfile) return false;
     return profileList[profileList.length - 1].id === selectedProfile.id;
 };
@@ -23,13 +35,16 @@ export const Drawer: React.FC = () => {
     const [editId, setEditId] = useState(-1);
     const endRef = React.useRef<HTMLDivElement>(null);
 
-    let profileList = useAppSelector(state => state.profiles);
+    let profileList = useAppSelector((state) => state.profiles);
     let selectedProfile = useAppSelector(selectSelectedProfile);
     const isFirstOrderProfile = useMemo(
         () => isFirstOrder(profileList, selectedProfile),
-        [profileList, selectedProfile],
+        [profileList, selectedProfile]
     );
-    const isLastOrderProfile = useMemo(() => isLastOrder(profileList, selectedProfile), [profileList, selectedProfile]);
+    const isLastOrderProfile = useMemo(
+        () => isLastOrder(profileList, selectedProfile),
+        [profileList, selectedProfile]
+    );
 
     const handleAddClick = useCallback(() => {
         dispatch(addProfile());
@@ -60,10 +75,10 @@ export const Drawer: React.FC = () => {
     const handleRename = useCallback(
         (newName: string) => {
             if (!selectedProfile?.id) return;
-            dispatch(renameProfile(selectedProfile?.id, newName));
+            dispatch(renameProfile({ id: selectedProfile?.id, name: newName }));
             setEditId(-1);
         },
-        [setEditId, selectedProfile, dispatch],
+        [setEditId, selectedProfile, dispatch]
     );
 
     return (
@@ -72,7 +87,7 @@ export const Drawer: React.FC = () => {
 
             <div id="profileWrapper" className="drawer-select flex">
                 <div id="profileList" className="scrollable">
-                    {profileList.map(profile => (
+                    {profileList.map((profile) => (
                         <ProfileItem
                             key={profile.id}
                             {...profile}
@@ -83,26 +98,47 @@ export const Drawer: React.FC = () => {
                     <div ref={endRef} />
                 </div>
                 <div className="toolbar flex">
-                    <div className="icon add" id="profileAdd" onClick={handleAddClick}></div>
+                    <div
+                        className="icon add"
+                        id="profileAdd"
+                        onClick={handleAddClick}
+                    ></div>
                     {selectedProfile?.type === "edit" && (
-                        <div className="icon edit show" id="profileEdit" onClick={handleEditClick}></div>
+                        <div
+                            className="icon edit show"
+                            id="profileEdit"
+                            onClick={handleEditClick}
+                        ></div>
                     )}
                     {selectedProfile?.type === "edit" && (
-                        <div className="icon delete show" id="profileDelete" onClick={handleDeleteClick}></div>
+                        <div
+                            className="icon delete show"
+                            id="profileDelete"
+                            onClick={handleDeleteClick}
+                        ></div>
                     )}
 
                     <div
-                        className={`icon down ${isLastOrderProfile ? "disabled" : ""}`}
+                        className={`icon down ${
+                            isLastOrderProfile ? "disabled" : ""
+                        }`}
                         id="profileDown"
                         onClick={handleDown}
                     ></div>
                     <div
-                        className={`icon up ${isFirstOrderProfile ? "disabled" : ""}`}
+                        className={`icon up ${
+                            isFirstOrderProfile ? "disabled" : ""
+                        }`}
                         id="profileUp"
                         onClick={handleUp}
                     ></div>
                 </div>
-                {showDeletEq && <DeleteConfirm setShowDeleteEq={setShowDeleteEq} selectedProfile={selectedProfile!} />}
+                {showDeletEq && (
+                    <DeleteConfirm
+                        setShowDeleteEq={setShowDeleteEq}
+                        selectedProfile={selectedProfile!}
+                    />
+                )}
             </div>
         </div>
     );

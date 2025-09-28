@@ -26,7 +26,11 @@ export const DeleteConfirm = ({
                 <div className="body-text t-center" id="delName">
                     {selectedProfile?.name}
                 </div>
-                <div className="thx-btn" id="cfmDelete" onClick={handleDeleteConfirmed}>
+                <div
+                    className="thx-btn"
+                    id="cfmDelete"
+                    onClick={handleDeleteConfirmed}
+                >
                     delete
                 </div>
             </div>

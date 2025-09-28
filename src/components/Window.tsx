@@ -1,6 +1,5 @@
 import React from "react";
-import { useAppSelector } from "../hooks";
-import { selectSelectedProfile } from "../store";
+import { selectSelectedProfile, useAppSelector } from "../store";
 
 export const Window: React.FC = () => {
     let selectedProfile = useAppSelector(selectSelectedProfile);

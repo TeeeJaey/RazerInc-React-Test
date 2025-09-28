@@ -1,25 +1,33 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Profile } from "../model";
-import { useAppSelector } from "../hooks";
 import { useDispatch } from "react-redux";
-import { selectProfile } from "../store";
+import { selectProfile, useAppSelector } from "../store";
 
 type ProfileItemProps = Profile & {
     isEditing?: boolean;
     onRename?: (val: string) => void;
 };
 
-export const ProfileItem: React.FC<ProfileItemProps> = ({ id, name, className, type, isEditing, onRename }) => {
+export const ProfileItem: React.FC<ProfileItemProps> = ({
+    id,
+    name,
+    className,
+    type,
+    isEditing,
+    onRename,
+}) => {
     const [value, setValue] = useState(name);
     const dispatch = useDispatch();
-    const selectedProfileId = useAppSelector(state => state.selectedProfileId);
+    const selectedProfileId = useAppSelector(
+        (state) => state.selectedProfileId
+    );
 
     const classNames = useMemo(
         () =>
             `profile-item ${className} ${type === "no-edit" ? "no-edit" : ""} ${
                 id === selectedProfileId ? "active" : ""
             }`,
-        [className, type, id, selectedProfileId],
+        [className, type, id, selectedProfileId]
     );
 
     const handleProfileClick = useCallback(() => {
@@ -31,7 +39,7 @@ export const ProfileItem: React.FC<ProfileItemProps> = ({ id, name, className, t
             if (e.target.value.length > 25) return;
             setValue(e.target.value);
         },
-        [setValue],
+        [setValue]
     );
 
     const handleBlur = useCallback(() => {
@@ -58,7 +66,11 @@ export const ProfileItem: React.FC<ProfileItemProps> = ({ id, name, className, t
                     />
                 </div>
             ) : (
-                <div key={id} className={classNames} onClick={handleProfileClick}>
+                <div
+                    key={id}
+                    className={classNames}
+                    onClick={handleProfileClick}
+                >
                     {name}
                 </div>
             )}
